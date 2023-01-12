@@ -121,7 +121,7 @@ my_lambda.handler.handler
 
 ## Example src/my_lambda/handler.py
 
-This is just a very pyyaml lambda function. Demonstrates:
+This is just a very minimal lambda function. Demonstrates:
 
 * Importing the package we specify as a dependency in the pyproject.toml
 * Printing the event info passed in the handler
