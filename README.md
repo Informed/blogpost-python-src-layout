@@ -26,5 +26,5 @@ Pull requests are welcome. Or just open an issue to discuss what your inputs or
 what you would like to see changed.
 
 ## License
-
+Copyright (c) 2023 Robert J. Berger and Informed Inc.
 [MIT](https://choosealicense.com/licenses/mit/)
