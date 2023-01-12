@@ -25,7 +25,7 @@ The main takeaways of the `src layout` are:
 * Generally no need for "import trickery"
 * References at end of this article
 
-We were looking for standards and best practices for organizing our Python AWS Lambda projects using Poetry in our monorepo and kept coming across the `src layout` as the recommended way to organize Python projects that had multiple modules. At the same time just about all examples of Python Lambda projects did not use `src layout` and in fact seemed to want to have the handler module at the top level of the project directory.  There just weren't many examples of this combination of `src layout` `Poetry` and AWS Lambdas.
+We were looking for standards and best practices for organizing our Python AWS Lambda projects using [Poetry](https://python-poetry.org) in our monorepo and kept coming across the `src layout` as the recommended way to organize Python projects that had multiple modules. At the same time just about all examples of Python Lambda projects did not use `src layout` and in fact seemed to want to have the handler module at the top level of the project directory.  There just weren't many examples of this combination of `src layout` `Poetry` and AWS Lambdas.
 
 Turns  out that it wasn't really difficult. The main "trick" is setting the Lambda `handler` name correctly.
 
