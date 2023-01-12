@@ -92,6 +92,10 @@ boto3 = "1.20.32"
 
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 ```
 
 Poetry expects a `src layout`. The fact that the `name` is the same as the directory name under `src` and that directory is a Python Package (i.e. it has an `__init__.py` and source code) means that Poetry will treat everything in `src/my_lambda` as the package its going to build. Everything in `src/my_lambda` and any dependencies under `[tool.poetry.dependencies]`  will end up in the deployed zip image that will become the lambda function image. In this example we have the `pyyaml` package included.
