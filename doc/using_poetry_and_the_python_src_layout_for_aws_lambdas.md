@@ -251,7 +251,7 @@ At this point your lambda should be ready to test. You can use the default test 
   "key3": "value3"
 }
 ```
-You can the default `Test` run on the AWS Lambda console and you will see all the log output as well as the result that would look something like:
+You can run the default `Test` on the AWS Lambda console and you will see all the log output as well as the result which would look something like:
 
 ```
 Test Event Name
@@ -287,7 +287,9 @@ aws lambda invoke --cli-binary-format raw-in-base64-out \
 outputfile.txt   --log-type Tail \
 --query 'LogResult' --output text |  base64 -d
 ```
-This will print the log output (same as you would see in the Test run in the AWS Console) from running the handler and you can see the returned value of the handler in `outputfile.txt`
+This will print the log output (same as what  was shown above in example of running the Test in the AWS Console) 
+
+You can see the returned value of the handler in `outputfile.txt`
 
 ## References on `src layout`
 
