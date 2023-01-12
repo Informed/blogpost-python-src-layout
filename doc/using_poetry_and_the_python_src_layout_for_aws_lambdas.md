@@ -291,6 +291,35 @@ This will print the log output (same as what  was shown above in example of runn
 
 You can see the returned value of the handler in `outputfile.txt`
 
+## Running tests with `Pytest`
+
+There is also a simple test example in `services/my_lambda/tests/test_my_handler.py`
+```python
+import pytest
+import os
+from my_lambda.handler import handler
+
+event = {"key1": "value1", "key2": "value2", "key3": "value3"}
+context = {}
+
+
+def test_my_handler():
+    # Emulate running in the same directory context as the lambda would
+    os.chdir("src")
+    assert handler(event, context) == "value1"
+```
+
+Before you run pytest for the first time in this project (or before you do any local development that needs  any of the packages in the `[tool.poetry.group.dev.dependencies]` section of `pyproject.toml`) you need to run at least once:
+```shell
+poetry install
+```
+This will install all the dependencies listed in your main `[tool.poetry.dependencies]` and in `[tool.poetry.group.dev.dependencies]` in the virtualenv that is managed by Poetry.
+
+You can run the test from `services/my_lambda`:
+```
+poetry run pytest
+```
+
 ## References on `src layout`
 
 * PyPA Python Packaging User Guide [src layout vs flat layout](https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/#src-layout-vs-flat-layout)
