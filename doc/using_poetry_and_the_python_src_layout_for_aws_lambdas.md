@@ -159,12 +159,12 @@ These commands should be executed in the top level of the project (i.e. `my_repo
 
 ### Building the distribution
 
-> Note: These command may not work for your appplication if it has dependencies that need to be compiled as part of the build process, particularly if you are building this on a machine that is not the same architecture as your target Lambda (i.e. building on an M1 Macintosh and targeting an x86_64 lambda). In that case you need to use Docker to do your building which is beyond the scope of this post.
+> Note: These command may not work for your actual application if it has dependencies that need to be compiled as part of the build process, particularly if you are building your application on a machine that is not the same architecture as your target Lambda (i.e. building on an M1 Macintosh and targeting an x86_64 lambda). In that case you need to use Docker to do your building which is beyond the scope of this post.
 >
-> These examples were only tested on a Mac
+> These examples were only tested on an M1 Mac but should work on any modern Mac or *nix machine
 
 
-1. First we export the dependencies from Poetry so that we can use `pip install` to create the files needed for the zip image.
+1. First we export the dependencies from Poetry so that we can later use `pip install` to create the files needed for the zip image.
     ```
     poetry export -f requirements.txt --output requirements.txt  --without-hashes
     ```
@@ -177,7 +177,7 @@ This will result in a bunch of files in the directory `dist` the top level of yo
     ```
     poetry run pip install -r requirements.txt --upgrade --only-binary :all: --platform manylinux2014_x86_64 --target package dist/*.whl
     ```
-This will result in a package suitable for zipping into the lambda image
+This will generate all the wheels of all the dependencies in the `package` directory, suitable for zipping into the lambda image
 
 1. Zip up the image
     ```
@@ -186,11 +186,11 @@ This will result in a package suitable for zipping into the lambda image
     zip -r -q out/my-lambda.zip . -x '*.pyc' out
     cd ..
     ```
-This will result in a file in `my_repo/services/my_lambda/package/out/my-lambda.zip`
+This will result in a file in `my_repo/services/my_lambda/package/out/my-lambda.zip` that is suitable for uploading to AWS as the Lambda Function image.
 
 ### Create the Lambda function
 
-You could do this in the AWS console or use the following AWS CLI Commands
+You could do this in the AWS console or use the following AWS CLI Commands (If you use the AWS Console, it will create the execution role and trust policy automatically by default).
 
 1. Create the [execution role and trust policy](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-awscli.html#with-userapp-walkthrough-custom-events-create-iam-role)
     ```
