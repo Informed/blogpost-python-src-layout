@@ -1,5 +1,3 @@
-# write a test for your lambda handler
-# this test will be run by pytest
 import pytest
 import os
 from my_lambda.handler import handler
