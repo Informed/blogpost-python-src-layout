@@ -98,7 +98,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 ```
 
-Poetry expects a `src layout`. The fact that the `name` is the same as the directory name under `src` and that directory is a Python Package (i.e. it has an `__init__.py` and source code) means that Poetry will treat everything in `src/my_lambda` as the package its going to build. Everything in `src/my_lambda` and any dependencies under `[tool.poetry.dependencies]`  will end up in the deployed zip image that will become the lambda function image. In this example we have the `pyyaml` package included.
+Poetry expects a `src layout`. The fact that the `name` is the same as the directory name under `src` and that directory is a Python Package (i.e. it has an `__init__.py` and source code) means that Poetry will treat everything in `src/my_lambda` as the package it's going to build. Everything in `src/my_lambda` and any dependencies under `[tool.poetry.dependencies]`  will end up in the deployed zip image that will become the lambda function image. In this example we have the `pyyaml` package included.
 
 The dependencies under `[tool.poetry.group.dev.dependencies]` will only be used for local builds, and not included in the zip image. You can put dependencies that are in the lambda runtime, like boto3 or any lambda layers (like Otel, or aws_powertools) in `[tool.poetry.group.dev.dependencies]` if you want them available for local testing.
 
@@ -112,7 +112,7 @@ The main thing that is different for configuring Lambdas when you use the `src l
 ```
 <package_name>.<handler_module_name>.<handler_function_name>`
 ```
-I.E. the [2 dot solution](https://gist.github.com/gene1wood/06a64ba80cf3fe886053f0ca6d375bc0) that specifies the handler like a package import path.
+Also known as the [2 dot solution](https://gist.github.com/gene1wood/06a64ba80cf3fe886053f0ca6d375bc0) that specifies the handler like a package import path.
 
 In our example that would be:
 ```python
@@ -165,7 +165,8 @@ These commands should be executed in the top level of the project (i.e. `my_repo
 
 > Note: These command may not work for your actual application if it has dependencies that need to be compiled as part of the build process, particularly if you are building your application on a machine that is not the same architecture as your target Lambda (i.e. building on an M1 Macintosh and targeting an x86_64 lambda). In that case you need to use Docker to do your building which is beyond the scope of this post.
 >
-> These examples were only tested on an M1 Mac but should work on any modern Mac or *nix machine
+> These examples were only tested on an M1 Mac but should work on any modern Mac or *nix machine and will build zip images suitable for targeting Linux x86 Lambdas if you do not need to build binary dependencies.
+> The `pip install` shown later uses the argument `--platform manylinux2014_x86_64` which forces the packaging to only include binary wheels built for Linux x86_64. The argument ` --only-binary :all:` ensures that it will not try to compile any source only dependencies and instead will emit an error letting you know that you must build the package in the native target environment (i.e. use a Docker build process). 
 
 
 1. First we export the dependencies from Poetry so that we can later use `pip install` to create the files needed for the zip image.
@@ -181,7 +182,7 @@ This will result in a bunch of files in the directory `dist` the top level of yo
     ```
     poetry run pip install -r requirements.txt --upgrade --only-binary :all: --platform manylinux2014_x86_64 --target package dist/*.whl
     ```
-This will generate all the wheels of all the dependencies in the `package` directory, suitable for zipping into the lambda image
+This will generate all the wheels of all the dependencies in the `package` directory, suitable for zipping into the lambda image. 
 
 1. Zip up the image
     ```
@@ -230,18 +231,20 @@ You could do this in the AWS console or use the following AWS CLI Commands (If y
     * Change the fake account-id (`1234567890123`) in the `role arn` to your AWS account-id
     ```shell
     aws lambda create-function --function-name my-lambda \
-    --zip-file fileb://package/out/my-lambda.zip --handler my_lambda.handler.handler --runtime python3.9 \
-    --role arn:aws:iam::1234567890123:role/my-lambda-ex
+      --zip-file fileb://package/out/my-lambda.zip \
+      --handler my_lambda.handler.handler --runtime python3.9 \
+      --role arn:aws:iam::1234567890123:role/my-lambda-ex
     ```
 
 #### If you already have created the Lambda function
 
-Ether you created the Lambda function some other way like via the Console or you want to update the Lambda function you created earlier, you can use the following command just to update it.
+If you created the Lambda function some other way like via the Console or you want to update the Lambda function you created earlier, you can use the following command just to update it.
 
 This mechanism loads the lambda from the S3 asset you uploaded earlier
-
-```
-aws lambda update-function-code --function-name my-lambda --zip-file fileb://package/out/my-lambda.zip --region us-west-2
+```shell
+aws lambda update-function-code --function-name my-lambda \
+  --zip-file fileb://package/out/my-lambda.zip \
+  --region us-west-2
 ```
 
 ### Test the Lambda
@@ -286,10 +289,10 @@ REPORT RequestId: 2f33f7b2-ddae-46df-a61b-1263ef404d6b	Duration: 1.57 ms	Billed 
 Or you could run it via the AWS CLI:
 ```
 aws lambda invoke --cli-binary-format raw-in-base64-out \
---function-name my-lambda \
---payload '{ "key1": "value1", "key2": "value2", "key3": "value3"}' \
-outputfile.txt   --log-type Tail \
---query 'LogResult' --output text |  base64 -d
+  --function-name my-lambda \
+  --payload '{ "key1": "value1", "key2": "value2", "key3": "value3"}' \
+  outputfile.txt   --log-type Tail \
+  --query 'LogResult' --output text |  base64 -d
 ```
 This will print the log output (same as what  was shown above in example of running the Test in the AWS Console) 
 
