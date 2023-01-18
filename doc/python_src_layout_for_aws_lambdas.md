@@ -1,5 +1,5 @@
 ---
-title: Using Poetry and the Python src layout for AWS Lambdas
+title: Python src Layout for AWS Lambdas
 menu_order: 1
 post_status: draft
 tags: aws, awscommunity, python, poetry, awslambda
@@ -7,7 +7,7 @@ post_excerpt: How to create AWS Lambdas with Poetry and the Python src layout
 canonical_url: https://informed.iq/using_poetry_and_the_python_src_layout_for_aws_lambdas
 ---
 
-# Using Poetry and the Python src layout for AWS Lambdas
+# Python src Layout for AWS Lambdas
 
 Over the last several years, the Python community has been moving towards a packaging layout format known as the `src layout` as the recommended way to organize directories and files for Python Packages.
 
@@ -202,7 +202,7 @@ You could do this in the AWS console or use the following AWS CLI Commands (If y
     aws iam create-role --role-name my-lambda-ex --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
     ```
     * You should get a result like the following.
-      * __Copy the arn from this output and you will use it for the next command__
+    * __Copy the arn from this output and you will use it for the next command__
     ```json
     {
         "Role": {
