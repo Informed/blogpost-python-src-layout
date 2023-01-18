@@ -4,7 +4,7 @@ menu_order: 1
 post_status: draft
 tags: aws, awscommunity, python, poetry, awslambda
 post_excerpt: How to create AWS Lambdas with Poetry and the Python src layout
-canonical_url: https://informed.iq/using_poetry_and_the_python_src_layout_for_aws_lambdas
+canonical_url: https://informed.iq/python_src_layout_for_aws_lambdas
 ---
 
 # Python src Layout for AWS Lambdas
@@ -50,7 +50,7 @@ blogpost-python-src-layout
 ├── LICENSE
 ├── README.md
 ├── doc
-│   └── using_poetry_and_the_python_src_layout_for_aws_lambdas.md
+│   └── python_src_layout_for_aws_lambdas.md
 └── services
     └── my_lambda
         ├── CHANGELOG.md
