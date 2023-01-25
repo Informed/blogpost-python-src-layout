@@ -90,4 +90,10 @@ Otherwise, this technique should work for just about any development environment
 
 Do let me know if you have any feedback,  know of any better ways or have improvements to this technique in the comments or by contacting me directly.
 
+## About the author
 
+_Robert J. Berger_
+
+As the Chief Architect, Rob guides the evolution of the [InformedIQ](https://www.informediq.com) Software and Infrastructure. His experience spans the rise and fall of many technology lifecycles from machine vision, digitization of professional video production equipment, Internet Infrastructure, Wireless, E-commerce, Big Data, IoT, DevOps and Machine Learning. He has been a founder or a technical leader in several startups in Silicon Valley.
+
+Mastodon: https://hachyderm.io/@rberger
