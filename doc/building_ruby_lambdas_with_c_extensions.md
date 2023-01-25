@@ -47,8 +47,8 @@ Here's some more details on what each line of the command do:
     1. `bundle install --deployment` [among other flags are depreciated](https://bundler.io/v2.4/man/bundle-install.1.html#OPTIONS) and its now recommended to use [bundle config](https://bundler.io/v2.4/man/bundle-config.1.html) to manage things like we do here.
         1. Either style of command updates the local `.bundle/config` in your project with
             ```
-BUNDLE_DEPLOYMENT: "true"
-BUNDLE_PATH: "vendor/bundle"
+            BUNDLE_DEPLOYMENT: "true"
+            BUNDLE_PATH: "vendor/bundle"
             ```  
         1. `--local` ensures that this gets applied only to your project
         1. `deployment  true`:
