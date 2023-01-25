@@ -82,6 +82,27 @@ Here's some more details on what each line of the command do:
 1. `bundle config unset path`
     * See previous command description
 
+## Zip it Up Good 
+
+You need to zip up your Ruby Project including the newly created `vendor/bundle`. This assume your current directory is your Ruby project with all your code, Gemfile, Gemfile.lock etc. Won't go into the details here. This is just the mechanics of packaging up your project into a zipfile suitable for uploading to your Lambda Function. 
+
+```
+mkdir -p pkg/out
+zip -q -r pkg/out/my-lambda.zip . -x pkg/*
+```
+
+### Upload to Lambda function
+
+This assumes you have already created your Lambda Function named `my-lambda` in your AWS Account in `us-west-2`.
+
+```shell
+aws lambda update-function-code --function-name my-lambda \
+  --zip-file fileb://pkg/out/my-lambda.zip \
+  --region us-west-2
+```
+
+For reference, the official docs: [Deploy Ruby Lambda functions with .zip file archives](https://docs.aws.amazon.com/lambda/latest/dg/ruby-package.html) (Ignore their instructions for using `bundle`)
+
 ## Wrapping Things Up
 
 If you use a modern Linux environment with the same processor architecture as your target Lambda, you can probably get away without having to use this Docker work around. Though it could still be safest to use this even there. The docker container being used is literally the same linux runtime as the target Lambda.
@@ -89,6 +110,7 @@ If you use a modern Linux environment with the same processor architecture as yo
 Otherwise, this technique should work for just about any development environment that can run Docker containers and run similar commands. Its only been tested it on a Mac though.
 
 Do let me know if you have any feedback,  know of any better ways or have improvements to this technique in the comments or by contacting me directly.
+
 
 ## About the author
 
