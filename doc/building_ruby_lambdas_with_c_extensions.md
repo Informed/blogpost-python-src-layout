@@ -1,10 +1,10 @@
-# Building AWS Ruby Lambdas that reuqire Gems with Native Extension
+# Building AWS Ruby Lambdas that Require Gems with Native Extension
 
 ## What's the Problem?
 
 If your Ruby development environment (e.g. a Mac) is different from your target Lambda in terms of operating system or architecture, there may be problems creating your Lambda image. This is especially true if your Ruby Gem Dependencies include C extensions. Without taking special steps, you may end up with a Lambda image that won't work when you try to run the Lambda.
 
-This is due to the fact that some Gems have native extensions that ether have prebuilt versions for specific target OS and architectures. Many common Gems have native extentions. Some of these include nokogiri, json,  nio4r and ffi.
+This is due to the fact that some Gems have native extensions that ether have prebuilt versions for specific target OS and architectures. Many common Gems have native extentions. Some of these include Gems like `nokogiri`, `json`,  `nio4r` and `ffi`.
 
 When you run `bundle install` on your Mac to create a `vendor/bundle` that you expect to package into your Lambda image, you will only get the versions of these GEMS that are for your Mac OS and architecture. For instance an M1 Mac will install native extention Gems for `arm64-darwin` 
 
