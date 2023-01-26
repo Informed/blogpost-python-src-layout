@@ -1,13 +1,11 @@
 ---
-title: Python src Layout for AWS Lambdas
-menu_order: 1
-post_status: draft
-tags: aws, awscommunity, python, poetry, awslambda
-post_excerpt: How to create AWS Lambdas with Poetry and the Python src layout
-canonical_url: https://informed.iq/python_src_layout_for_aws_lambdas
+title: "Python src Layout for AWS Lambdas"
+publish: false
+tags: ["aws", "python", "poetry", "lambda"]
+license: "Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)"
+description: How to create AWS Lambdas with Poetry with the Python src layout
+canonical_url: https://www.informediq.com/python-src-layout-for-aws-lambdas 
 ---
-
-# Python src Layout for AWS Lambdas
 
 Over the last several years, the Python community has been moving towards a packaging layout format known as the `src layout` as the recommended way to organize directories and files for Python Packages.
 
@@ -169,66 +167,72 @@ These commands should be executed in the top level of the project (i.e. `my_repo
 > The `pip install` shown later uses the argument `--platform manylinux2014_x86_64` which forces the packaging to only include binary wheels built for Linux x86_64. The argument ` --only-binary :all:` ensures that it will not try to compile any source only dependencies and instead will emit an error letting you know that you must build the package in the native target environment (i.e. use a Docker build process). 
 
 
-1. First we export the dependencies from Poetry so that we can later use `pip install` to create the files needed for the zip image.
-    ```
-    poetry export -f requirements.txt --output requirements.txt  --without-hashes
-    ```
-1. Have Poetry build all the wheels and such
-    ```
-    poetry build
-    ```
+1) First we export the dependencies from Poetry so that we can later use `pip install` to create the files needed for the zip image.
+```
+poetry export -f requirements.txt --output requirements.txt  --without-hashes
+```
+2) Have Poetry build all the wheels and such
+```
+poetry build
+```
 This will result in a bunch of files in the directory `dist` the top level of your project.
-1. Use pip to create the packages
-    ```
-    poetry run pip install -r requirements.txt --upgrade --only-binary :all: --platform manylinux2014_x86_64 --target package dist/*.whl
-    ```
+
+3) Use pip to create the packages
+```
+poetry run pip install -r requirements.txt --upgrade --only-binary :all: --platform manylinux2014_x86_64 --target package dist/*.whl
+```
 This will generate all the wheels of all the dependencies in the `package` directory, suitable for zipping into the lambda image. 
 
-1. Zip up the image
-    ```
-    cd package
-    mkdir -p out
-    zip -r -q out/my-lambda.zip . -x '*.pyc' out
-    cd ..
-    ```
+4) Zip up the image
+```
+cd package
+mkdir -p out
+zip -r -q out/my-lambda.zip . -x '*.pyc' out
+cd ..
+```
 This will result in a file in `my_repo/services/my_lambda/package/out/my-lambda.zip` that is suitable for uploading to AWS as the Lambda Function image.
 
 ### Create the Lambda function
 
 You could do this in the AWS console or use the following AWS CLI Commands (If you use the AWS Console, it will create the execution role and trust policy automatically by default).
 
-1. Create the [execution role and trust policy](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-awscli.html#with-userapp-walkthrough-custom-events-create-iam-role)
-    ```
-    aws iam create-role --role-name my-lambda-ex --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
-    ```
-    * You should get a result like the following.
-    * __Copy the arn from this output and you will use it for the next command__
-    ```json
-    {
-        "Role": {
-            "Path": "/",
-            "RoleName": "my-lambda-ex",
-            "RoleId": "AROAWUWOOBVLDKY7ZE7P3",
-            "Arn": "arn:aws:iam::1234567890123:role/my-lambda-ex",
-            "CreateDate": "2023-01-12T06:08:22+00:00",
-            "AssumeRolePolicyDocument": {
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": "lambda.amazonaws.com"
-                        },
-                        "Action": "sts:AssumeRole"
-                    }
-                ]
-            }
+1) Create the [execution role and trust policy](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-awscli.html#with-userapp-walkthrough-custom-events-create-iam-role)
+
+```
+aws iam create-role --role-name my-lambda-ex --assume-role-policy-document '{"Version": "2012-10-17","Statement": [{ "Effect": "Allow", "Principal": {"Service": "lambda.amazonaws.com"}, "Action": "sts:AssumeRole"}]}'
+```
+
+  * You should get a result like the following.
+  * __Copy the arn from this output and you will use it for the next command__
+
+```json
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "my-lambda-ex",
+        "RoleId": "AROAWUWOOBVLDKY7ZE7P3",
+        "Arn": "arn:aws:iam::1234567890123:role/my-lambda-ex",
+        "CreateDate": "2023-01-12T06:08:22+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "lambda.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
         }
     }
-    ```
-1. Create the Lambda function
-    * You have to set the `handler` to the 2 dot style `my_lambda.handler.handler`
-    * Change the fake account-id (`1234567890123`) in the `role arn` to your AWS account-id
+}
+```
+
+2) Create the Lambda function
+
+   * You have to set the `handler` to the 2 dot style `my_lambda.handler.handler`
+   * Change the fake account-id (`1234567890123`) in the `role arn` to your AWS account-id
     ```shell
     aws lambda create-function --function-name my-lambda \
       --zip-file fileb://package/out/my-lambda.zip \
