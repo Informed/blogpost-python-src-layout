@@ -1,9 +1,10 @@
 ---
 title: "Python src Layout for AWS Lambdas"
-publish: false
+published: true
 tags: ["aws", "python", "poetry", "lambda"]
 license: "Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)"
 description: How to create AWS Lambdas with Poetry with the Python src layout
+cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/sjnke77d5jwr58rms80e.jpg
 canonical_url: https://www.informediq.com/python-src-layout-for-aws-lambdas 
 ---
 
