@@ -41,22 +41,22 @@ This Docker runtime has the current directory of your Mac mapped into its curren
 Here's some more details on what each line of the command do:
 
 1. `` dir=`pwd` ``
-    Capture the current directory path in a shell variable just to make it easy to reuse in the following commands
+  Capture the current directory path in a shell variable just to make it easy to reuse in the following commands
 1. `bundle config set --local deployment 'true'`
     Set `bundler` configuration to `deployment` mode
     1. `bundle install --deployment` [among other flags are depreciated](https://bundler.io/v2.4/man/bundle-install.1.html#OPTIONS) and its now recommended to use [bundle config](https://bundler.io/v2.4/man/bundle-config.1.html) to manage things like we do here.
-        1. Either style of command updates the local `.bundle/config` in your project with
-            ```
-            BUNDLE_DEPLOYMENT: "true"
-            BUNDLE_PATH: "vendor/bundle"
-            ```  
-        1. `--local` ensures that this gets applied only to your project
-        1. `deployment  true`:
+        * Either style of command updates the local `.bundle/config` in your project with
+        ```
+         BUNDLE_DEPLOYMENT: "true"
+         BUNDLE_PATH: "vendor/bundle"
+        ``` 
+        * `--local` ensures that this gets applied only to your project
+        * `deployment  true`:
             * Disallows changes to the `Gemfile` if the `Gemfile.lock` is older than Gemfile
             * It also sets the `BUNDLE_PATH` to `vendor/bundle`
             * This config be "sticky" after this which you probably don't want if you later do normal local development 
                 * Later `config unset` commands will unset these
-1. `docker run`
+    1. `docker run`
     The start of the [docker command run](https://docs.docker.com/engine/reference/commandline/run/). The following are the arguments to this command
     1. `-e BUNDLE_SILENCE_ROOT_WARNING=1`
         * Suppress the warning not to run as root, as docker default to the root user
