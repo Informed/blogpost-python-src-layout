@@ -130,6 +130,7 @@ This is just a very minimal lambda function that demonstrates:
 ```python
 import json
 import os
+import pkgutil
 from . import utils
 
 # We're not using pyyaml, just showing that it's installed
@@ -146,8 +147,7 @@ def handler(event, context):
 
     print(utils.my_util())
     print(f"cwd: {os.getcwd()}")
-    with open("my_lambda/stuff/config.yml") as f:
-        lines = f.readlines()
+    lines = pkgutil.get_data(__name__, "my_lambda/stuff/config.yml")
     print("File contents of my_lambda/stuff/config.yml:")
     print(lines)
 
@@ -156,13 +156,13 @@ def handler(event, context):
 
 ## Building and deploying the Lambda
 
-This is the basics of  building and deploying the lambda using Poetry. You may have more sophisticated CI/CD process.
+This is the basics of building and deploying the lambda using Poetry. You may have a more sophisticated CI/CD process.
 
 These commands should be executed in the top level of the project (i.e. `my_repo/services/my_lambda`)
 
 ### Building the distribution
 
-> Note: These command may not work for your actual application if it has dependencies that need to be compiled as part of the build process, particularly if you are building your application on a machine that is not the same architecture as your target Lambda (i.e. building on an M1 Macintosh and targeting an x86_64 lambda). In that case you need to use Docker to do your building which is beyond the scope of this post.
+> Note: These commands may not work for your actual application if it has dependencies that need to be compiled as part of the build process, particularly if you are building your application on a machine that is not the same architecture as your target Lambda (i.e. building on an M1 Macintosh and targeting an x86_64 lambda). In that case you need to use Docker to do your building which is beyond the scope of this post.
 >
 > These examples were only tested on an M1 Mac but should work on any modern Mac or *nix machine and will build zip images suitable for targeting Linux x86 Lambdas if you do not need to build binary dependencies.
 > The `pip install` shown later uses the argument `--platform manylinux2014_x86_64` which forces the packaging to only include binary wheels built for Linux x86_64. The argument ` --only-binary :all:` ensures that it will not try to compile any source only dependencies and instead will emit an error letting you know that you must build the package in the native target environment (i.e. use a Docker build process). 
